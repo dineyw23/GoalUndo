@@ -126,6 +126,45 @@ TEST(GoalUndoTest, getLatestGoal)
 }
 
 /*
+ *  Test for getOperations to return all names with spaces.
+ *
+ */
+
+TEST(GoalUndoTest, getAllOpsFromRecentGoal)
+{
+  GoalUndo goalUndoObj;
+  goalUndoObj.addOperation("Eat Healthy","proteins");
+  goalUndoObj.addOperation("carbs");
+  goalUndoObj.addOperation("carbsPlus");
+  ASSERT_EQ("proteins carbs carbsPlus",goalUndoObj.getOperations());
+}
+
+/*
+ * Test for all operations to return nothing when no goals
+ */
+
+TEST(GoalUndoTest, getOpsEmptyString)
+{
+  GoalUndo goalUndoObj;
+  ASSERT_EQ("",goalUndoObj.getOperations());
+}
+
+/*
+ *  Test if getOperation returns all spaces, some spaces and top most only.
+ */
+
+TEST(GoalUndoTest,getAllSpacesInOperations)
+{
+  GoalUndo goalUndoObj;
+  goalUndoObj.addOperation(" "," ");
+  goalUndoObj.addOperation(" ");
+  goalUndoObj.addOperation(" ");
+  EXPECT_EQ("     ",goalUndoObj.getOperations());
+  goalUndoObj.addOperation("GoalNew","NewOperation");
+  ASSERT_EQ("NewOperation",goalUndoObj.getOperations());
+}
+
+/*
  *  Test undoGoal to check if it undoes only the latest 
  *  goal and its operations.
  */
@@ -153,4 +192,5 @@ TEST(GoalUndoTest, undoEmptyGoalList)
   goalUndoObj.undoGoal();
   ASSERT_EQ("",goalUndoObj.getGoal());
 }
+
 
