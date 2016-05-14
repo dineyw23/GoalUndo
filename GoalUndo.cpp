@@ -43,9 +43,9 @@ void GoalUndo::undoOperation(std::string undoOp)
 	{
 		std::vector<std::string>::iterator iter;
 
-		for(iter=goals.top().operations.end(); 
-			iter > goals.top().operations.begin();
-			--iter )
+		for(iter=goals.top().operations.end()-1; 
+			iter >= goals.top().operations.begin();
+			iter-- )
 		{
 			if( iter->compare(undoOp) == 0 ) //match!
 			{
