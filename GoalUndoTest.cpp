@@ -44,4 +44,32 @@ TEST(GoalUndoTest, getLatestGoal)
   ASSERT_EQ("Sleep Well",goalUndoObj.getGoal());
 }
 
+/*
+ *  Test undoGoal to check if it undoes only the latest 
+ *  goal and its operations.
+ */
+
+TEST(GoalUndoTest, undoLatestGoal)
+{
+  GoalUndo goalUndoObj;
+  goalUndoObj.addOperation("Sleep Well","10pm");
+  goalUndoObj.addOperation("Eat Healthy","proteins");
+  //Check if goal is added
+  ASSERT_EQ("Eat Healthy",goalUndoObj.getGoal());
+  goalUndoObj.undoGoal(); //Most imp
+  ASSERT_NE("",goalUndoObj.getGoal());
+  ASSERT_EQ("Sleep Well",goalUndoObj.getGoal());
+}
+
+/*  
+ * Test undoGoal to check if it does nothing when called
+ * on empty list.
+ */
+
+TEST(GoalUndoTest, undoEmptyGoalList)
+{
+  GoalUndo goalUndoObj;
+  goalUndoObj.undoGoal();
+  ASSERT_EQ("",goalUndoObj.getGoal());
+}
 
