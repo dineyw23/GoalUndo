@@ -193,4 +193,129 @@ TEST(GoalUndoTest, undoEmptyGoalList)
   ASSERT_EQ("",goalUndoObj.getGoal());
 }
 
+/*
+ * Check if undoOperation doesn't do anything is goals stack is empty.
+ */
+
+TEST(GoalUndoTest,undoOperationsNoGoals)
+{
+  GoalUndo goalUndoObj;
+  goalUndoObj.undoOperation();
+  ASSERT_EQ("",goalUndoObj.getGoal());
+}
+
+/*  
+ *  Test if undoOperation removes only the most recent operation.
+ */
+
+TEST(GoalUndoTest, removeMostRecentOperation)
+{
+  GoalUndo goalUndoObj;
+  goalUndoObj.addOperation("Eat Healthy","proteins");
+  goalUndoObj.addOperation("carbs");
+  goalUndoObj.undoOperation(); //Most Imp 
+  ASSERT_EQ("proteins",goalUndoObj.getOperations());
+}
+
+/*
+ *  Test if undoOperation removes most recent operation
+ *  along with the goal if it's the last one.
+ */
+
+TEST(GoalUndoTest,removeOperationAndGoal)
+{
+  GoalUndo goalUndoObj;
+  goalUndoObj.addOperation("Eat Healthy","proteins");
+  goalUndoObj.undoOperation(); //Most Imp 
+  ASSERT_EQ("",goalUndoObj.getGoal());
+  ASSERT_EQ("",goalUndoObj.getOperations());
+}
+
+/*
+ *  Test if the undoOperation(Op) does nothing when there are no goals.
+ */
+
+TEST(GoalUndoTest, emptyCheckUndoOperation)
+{
+  GoalUndo goalUndoObj;
+  goalUndoObj.undoOperation("something");
+  ASSERT_EQ("",goalUndoObj.getGoal());
+  ASSERT_EQ("",goalUndoObj.getOperations());
+}
+
+/*
+ * Test if undoOperation(Op) removes only match and removes
+ * goals as well if it's the only operation. 
+ *
+ */
+
+TEST(GoalUndoTest, removeOnlyMatch)
+{
+  GoalUndo goalUndoObj;
+  goalUndoObj.addOperation("Eat Healthy","proteins");
+  goalUndoObj.undoOperation("proteins");
+  EXPECT_EQ("",goalUndoObj.getGoal());
+}
+
+/*
+ *  Check if undoOperation(Op) removes operation properly.
+ *
+ */
+
+TEST(GoalUndoTest, removeMatch)
+{
+  GoalUndo goalUndoObj;
+  goalUndoObj.addOperation("Eat Healthy","proteins");
+  goalUndoObj.addOperation("carbs");
+  goalUndoObj.undoOperation("proteins");//Imp Test
+  ASSERT_EQ("Eat Healthy",goalUndoObj.getGoal());
+}
+
+/*
+ * Test to check if duplicate operations are not removed.
+ *
+ */
+
+TEST(GoalUndoTest, removeOnlyFirstMatch)
+{
+  GoalUndo goalUndoObj;
+  goalUndoObj.addOperation("Eat Healthy","proteins");
+  goalUndoObj.addOperation("carbs");
+  goalUndoObj.addOperation("proteins");
+  goalUndoObj.addOperation("proteins");
+  goalUndoObj.undoOperation("proteins");//Imp Test
+  ASSERT_EQ("proteins carbs proteins",goalUndoObj.getOperations());
+}
+ 
+/*
+ * If no match is found, undoOperation(Op) does nothing.
+ *
+ */
+
+TEST(GoalUndoTest, undoOperationNoMatch)
+{
+  GoalUndo goalUndoObj;
+  goalUndoObj.addOperation("Eat Healthy","proteins");
+  goalUndoObj.addOperation("carbs");
+  goalUndoObj.undoOperation("No Match");//Imp Test
+  ASSERT_EQ("proteins carbs",goalUndoObj.getOperations());
+}
+
+/*
+ * Duplicate goals and duplicate operations
+ *
+ */
+
+TEST(GoalUndoTest, removeOpFromSingleGoal)
+{
+  GoalUndo goalUndoObj;
+  goalUndoObj.addOperation("Eat Healthy","proteins");
+  goalUndoObj.addOperation("Eat Healthy New","proteins");
+  goalUndoObj.addOperation("carbs");
+  goalUndoObj.undoOperation("proteins");
+  ASSERT_EQ("carbs",goalUndoObj.getOperations());
+  goalUndoObj.undoOperation(); //Removes Eat Healthy New
+  goalUndoObj.undoOperation(); //Remove Everything
+  ASSERT_EQ("",goalUndoObj.getGoal());
+}
 
