@@ -249,12 +249,26 @@ TEST(GoalUndoTest, emptyCheckUndoOperation)
  *
  */
 
-TEST(GoalUndoTest, removeOnlyMatch)
+TEST(GoalUndoTest, undoLastAndOnlyOperation)
 {
   GoalUndo goalUndoObj;
   goalUndoObj.addOperation("Eat Healthy","proteins");
   goalUndoObj.undoOperation("proteins");
-  EXPECT_EQ("",goalUndoObj.getGoal());
+  ASSERT_EQ("",goalUndoObj.getGoal());
+}
+
+/*
+ * Removes the goal if there are no operations and
+ * should return next Goal in the stack. 
+ */
+
+TEST(GoalUndoTest, removeOnlyRecentOpAndGoal)
+{
+  GoalUndo goalUndoObj;
+  goalUndoObj.addOperation("Eat Healthy","proteins");
+  goalUndoObj.addOperation("Eat Healthy2","proteins");
+  goalUndoObj.undoOperation("proteins");//Should remove Eat Healthy2
+  ASSERT_EQ("Eat Healthy",goalUndoObj.getGoal()); 
 }
 
 /*
